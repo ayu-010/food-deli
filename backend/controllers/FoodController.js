@@ -3,9 +3,18 @@ const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 exports.addFood = async (req, res) => {
   try {
-    const { name, description, price, category } = req.body;
+    const { name, description, category, price } = req.body;
+    console.log("value inside backend",name,description,price,category);
+
+
+    console.log("Request Body:", req.body);
+    console.log("Uploaded File:", req.files && req.files.Foodimage);
+
     // new to do object create aur db me daal diya h
-    const file = req.files.Foodimage;
+    const file = req.files && req.files.Foodimage;
+    if (!file) {
+      throw new Error("No file uploaded or incorrect file key");
+    }
     console.log("FIle me kya h dekh lo bhai ", file);
 
     // file bhi lena jo hum  daalenge cloudinary mein
@@ -24,7 +33,7 @@ exports.addFood = async (req, res) => {
       image: uploadedImage.secure_url,
     });
     console.log(response);
-    res.status(200).json({
+ return   res.status(200).json({
       success: true,
       data: response,
       message: "Entry Created Successfully",
@@ -32,7 +41,7 @@ exports.addFood = async (req, res) => {
   } catch (err) {
     console.error(err);
     console.log(err);
-    res.status(500).json({
+ return   res.status(500).json({
       success: false,
       data: "internal server error",
       message: err.message,
@@ -44,15 +53,15 @@ exports.allFoodList = async (req, res) => {
   try {
     const response = await Food.find({});
     console.log(response);
-    res.status(200).json({
+   return res.status(200).json({
       success: true,
       data: response,
-      message: "Entry Created Successfully",
+      message: "Entry displayed Successfully",
     });
   } catch (err) {
     console.error(err);
     console.log(err);
-    res.status(500).json({
+   return res.status(500).json({
       success: false,
       data: "internal server error",
       message: err.message,
@@ -62,18 +71,18 @@ exports.allFoodList = async (req, res) => {
 
 exports.removeFoodList = async (req, res) => {
     try {
-      const {id}=req.body
+      const {id} = req.params;
       const response = await Food.findByIdAndDelete({_id:id});
       console.log(response);
-      res.status(200).json({
+   return   res.status(200).json({
         success: true,
         data: response,
-        message: "Entry Created Successfully",
+        message: "Entry deleted Successfully",
       });
     } catch (err) {
       console.error(err);
       console.log(err);
-      res.status(500).json({
+   return   res.status(500).json({
         success: false,
         data: "internal server error",
         message: err.message,

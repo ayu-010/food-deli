@@ -8,5 +8,6 @@ router.post("/add", addFood);
 
 
 router.get("/list",allFoodList)
-router.delete("/remove",removeFoodList)
+
+router.delete("/remove/:id",removeFoodList)
 module.exports = router;
